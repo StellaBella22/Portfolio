@@ -1,16 +1,20 @@
-**Endpoint name**
+# Open Library Search API
+
+## Endpoint name
 
 search.json
 
-**Description**
+## Description
 
 Searches the Open Library catalog for books that match your search words and returns the results as JSON.
 
-**Request**
+## Request
 
-GET <https://openlibrary.org/search.json>
+```
+GET https://openlibrary.org/search.json
+```
 
-**Request parameters**
+## Request parameters
 
 | **Name** | **Type** | **Required** | **Description**                                                                                                                                                                                  |
 | -------- | -------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -19,11 +23,11 @@ GET <https://openlibrary.org/search.json>
 | page     | integer  | No           | Which page of results to return. Use with limit to step through long result lists.                                                                                                               |
 | q        | string   | No           | Words to search for. If omitted, no books are returned, and no error is given.                                                                                                                   |
 
-**Response fields**
+## Response fields
 
 | **Name**          | **Type** | **Description**                                                           |
 | ----------------- | -------- | ------------------------------------------------------------------------- |
-| docs              | array    | List of matching books in this batch. See Book fields.                    |
+| docs              | array    | List of matching books in this batch. See [Book fields](#book-fields).                    |
 | documentation_url | string   | Link to the documentation for the Search API.                             |
 | num_found         | integer  | Same value as numFound.                                                   |
 | numFound          | integer  | Number of matching books in total.                                        |
@@ -32,7 +36,7 @@ GET <https://openlibrary.org/search.json>
 | q                 | string   | Words that were searched for.                                             |
 | start             | integer  | The position of the first book in this batch, counting from 0.            |
 
-**Book fields**
+## Book fields
 
 | **Name**             | **Type**         | **Description**                                                                                                                 |
 | -------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -40,9 +44,9 @@ GET <https://openlibrary.org/search.json>
 | author_name          | array of strings | Names of the book's authors.                                                                                                    |
 | cover_edition_key    | string           | ID of the edition whose cover is shown.                                                                                         |
 | cover_height         | integer          | Height of the cover image in pixels.                                                                                            |
-| cover_i              | integer          | ID of the cover image. To view the image, use <https://covers.openlibrary.org/b/id/{cover_i}-L.jpg>                             |
+| cover_i              | integer          | ID of the cover image. To view the image, use `https://covers.openlibrary.org/b/id/{cover_i}-L.jpg`                             |
 | cover_width          | integer          | Width of the cover image in pixels.                                                                                             |
-| ebook_access         | string           | Identifies whether a book is available as an ebook and what kind of access it has. See Ebook access values below.               |
+| ebook_access         | string           | Identifies whether a book is available as an ebook and what kind of access it has. See [Ebook access values](#ebook-access-values) below.               |
 | edition_count        | integer          | Number of editions of this work.                                                                                                |
 | first_publish_year   | integer          | Four-digit year the book was first published.                                                                                   |
 | has_fulltext         | boolean          | Indicates whether the full text of the book is available digitally for viewing or searching within the platform.                |
@@ -60,7 +64,7 @@ GET <https://openlibrary.org/search.json>
 
 This is a standard set of fields. The parameter fields=\* returns all available fields from Open Library for a book.
 
-**Ebook access values**
+## Ebook access values
 
 | **Value**     | **Meaning**                                                             |
 | ------------- | ----------------------------------------------------------------------- |
@@ -70,9 +74,10 @@ This is a standard set of fields. The parameter fields=\* returns all available 
 | public        | Free for anyone to read.                                                |
 | unclassified  | A digital copy exists, but its access level hasn't been set.            |
 
-**Sample request and response**
 
-**Request**
+## Sample request and response
+
+### Request
 
 ```
 GET https://openlibrary.org/search.json?q=ann%20patchett&fields=title,author_name,first_publish_year&limit=2
@@ -82,8 +87,9 @@ This request searches for "Ann Patchett" and returns the first two matching book
 
 **Note**: If you want to test the request, copy the text starting from **https://**.
 
-```
-Response
+### Response
+
+```json
 {
   "numFound": 123,
   "start": 0,
@@ -111,13 +117,11 @@ Response
 }
 ```
 
-**Errors and unexpected results**
+## Errors and unexpected results
 
-**Labels that don't exist are ignored**
+### Labels that don't exist are ignored
 
-```
-Status code: 200 OK
-```
+**Status code:** 200 OK
 
 **Request**
 
@@ -127,7 +131,7 @@ GET https://openlibrary.org/search.json?q=ann%20patchett&fields=title,plot_summa
 
 **Response**
 
-```
+```json
 {
   "numFound": 123,
   "start": 0,
@@ -142,14 +146,26 @@ GET https://openlibrary.org/search.json?q=ann%20patchett&fields=title,plot_summa
     }
   ]
 }
+```
+
 The request asked for the book title and plot summary:
-title is a valid field and is returned.
-plot_summary is not a valid field and is not returned.
-Query text is missing
-Status code: 200 OK
-Request
+
+- title is a valid field and is returned.
+- plot_summary is not a valid field and is not returned.
+
+### Query text is missing
+
+**Status code:** 200 OK
+
+**Request**
+
+```
 GET https://openlibrary.org/search.json?fields=title,author_name&limit=1
-Response
+```
+
+**Response**
+
+```json
 {
   "numFound": 0,
   "start": 0,
@@ -160,12 +176,23 @@ Response
   "offset": null,
   "docs": []
 }
+```
+
 All response labels come back, but numFound is 0 and docs is empty. No error is returned.
-Limit field is entered as a string
-Status code: 422 Unprocessable Content
-Request
+
+### Limit field is entered as a string
+
+**Status code:** 422 Unprocessable Content
+
+**Request**
+
+```
 GET https://openlibrary.org/search.json?q=ann%20patchett&fields=title,author_name&limit=two
-Response
+```
+
+**Response**
+
+```json
 {
   "detail": [
     {
@@ -179,8 +206,16 @@ Response
     }
   ]
 }
-The request fails and returns an error message indicating that limit must be an integer, not a string.
-Error response table
 ```
 
-<div class="joplin-table-wrapper"><table><thead><tr><th><pre><code><strong>Name</strong></code></pre></th><th><pre><code><strong>Type</strong></code></pre></th><th><pre><code><strong>Description</strong></code></pre></th></tr></thead><tbody><tr><td><pre><code>detail</code></pre></td><td><pre><code>array</code></pre></td><td><pre><code>List of errors in the request. Each item describes one error.</code></pre></td></tr><tr><td><pre><code>detail.type</code></pre></td><td><pre><code>string</code></pre></td><td><pre><code>Code for the kind of error, such as int_parsing.</code></pre></td></tr><tr><td><pre><code>detail.loc</code></pre></td><td><pre><code>array of strings</code></pre></td><td><pre><code>Where the error is: the part of the request (query) and the parameter name (limit).</code></pre></td></tr><tr><td><pre><code>detail.msg</code></pre></td><td><pre><code>string</code></pre></td><td><pre><code>Text of the error message.</code></pre></td></tr><tr><td><pre><code>detail.input</code></pre></td><td><pre><code>string</code></pre></td><td><pre><code>The value that contains the error. </code></pre></td></tr></tbody></table></div>
+The request fails and returns an error message indicating that limit must be an integer, not a string.
+
+### Error response fields
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| detail | array | List of errors in the request. Each item describes one error. |
+| detail.type | string | Code for the kind of error, such as int_parsing. |
+| detail.loc | array of strings | Where the error is: the part of the request (query) and the parameter name (limit). |
+| detail.msg | string | Text of the error message. |
+| detail.input | string | The value that contains the error. |
