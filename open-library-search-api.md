@@ -10,7 +10,7 @@ Searches the Open Library catalog for books that match your search words and ret
 
 ## Request
 
-```
+```json
 GET https://openlibrary.org/search.json
 ```
 
