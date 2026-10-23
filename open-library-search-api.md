@@ -79,7 +79,7 @@ This is a standard set of fields. The parameter fields=\* returns all available 
 
 ### Request
 
-```
+```json
 GET https://openlibrary.org/search.json?q=ann%20patchett&fields=title,author_name,first_publish_year&limit=2
 ```
 
@@ -125,7 +125,7 @@ This request searches for "Ann Patchett" and returns the first two matching book
 
 **Request**
 
-```
+```json
 GET https://openlibrary.org/search.json?q=ann%20patchett&fields=title,plot_summary&limit=1
 ```
 
@@ -159,7 +159,7 @@ The request asked for the book title and plot summary:
 
 **Request**
 
-```
+```json
 GET https://openlibrary.org/search.json?fields=title,author_name&limit=1
 ```
 
@@ -186,7 +186,7 @@ All response labels come back, but numFound is 0 and docs is empty. No error is 
 
 **Request**
 
-```
+```json
 GET https://openlibrary.org/search.json?q=ann%20patchett&fields=title,author_name&limit=two
 ```
 
